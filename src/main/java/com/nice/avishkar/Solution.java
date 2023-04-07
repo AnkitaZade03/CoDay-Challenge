@@ -1,5 +1,7 @@
 package com.nice.avishkar;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.file.Path;
 import com.nice.avishkar.CandidateVotes;
 import com.nice.avishkar.ConstituencyResult;
@@ -43,12 +45,6 @@ public class Solution {
 
 		}
 
-		for (Map.Entry<String, Integer> entry : mp.entrySet()) {
-			String key = entry.getKey();
-			Integer value = entry.getValue();
-			System.out.println(key + " = " + value);
-		}
-
 
 
 		for (Map.Entry<String, Map<String, Integer>> entry : mapOfmap.entrySet()) {
@@ -77,14 +73,23 @@ public class Solution {
 			candidateVotesList.clear();
 		}
 
+
 	}
 
-	public ElectionResult execute(Path candidateFile, Path votingFile) {
+	public ElectionResult execute(Path candidateFile, Path votingFile) throws IOException {
 		ReadCsv("../resources/votingFile.csv");
 		ElectionResult resultData = new ElectionResult(constituencyResultList);
 
+		ObjectMapper objectMapper = new ObjectMapper();
+
+//		resultData.setResultData(new ArrayList<>(1));
+		String jsonFile = objectMapper.writeValueAsString(resultData);
+
+		System.out.println(jsonFile);
+
 		// Write code here to read CSV files and process them
 
+		objectMapper.writeValue(new File("D:\\data.json"),jsonFile);
 		return resultData;
 	}
 }
